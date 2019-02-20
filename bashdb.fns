@@ -1,0 +1,23 @@
+# After each line of the test script is executed the shell traps to this function 
+
+function_steptrap
+{
+    _curline=$1     #the number of the line that just ran
+    
+    (( $_trace )) && _msg "$PS4 line $_curline: ${_lines[$_curline]}"
+
+    if (( $_steps >= 0 )); then
+        let _steps="$_steps - 1"
+    fi
+
+    # First check to see if a line number breakpoint was reached.
+    # if so, enter the db
+    if _at_linenumbp ; then
+        _msg "Reached breakpoint at line $_curline"
+        _cmdloop
+
+    # it wasnt, check whether break condition exists and its true
+    # if it is, then enter the debugger
+    elif [ -n "$_brcond"] && eval &_brcond; then
+        _msg "Break condition $_
+}
